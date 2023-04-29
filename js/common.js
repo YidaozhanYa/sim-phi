@@ -233,11 +233,11 @@ export function csv2array(data, isObject) {
 // self.onerror=(...a)=>console.log('qwq',a);
 // self.addEventListener('error',(...a)=>console.log('qwq',a));
 export const urls = {
-	jszip: ['/external/jszip.min.js'],
-	browser: ['/external/Browser.js'],
-	bitmap: ['/external/createImageBitmap.js'],
-	blur: ['/external/stackblur.min.js'],
-	md5: ['/external/md5.min.js'],
+	jszip: ['app://-/external/jszip.min.js'],
+	browser: ['app://-/external/Browser.js'],
+	bitmap: ['app://-/external/createImageBitmap.js'],
+	blur: ['app://-/external/stackblur.min.js'],
+	md5: ['app://-/external/md5.min.js'],
 }
 export const getConstructorName = obj => {
 	if (obj === null) return 'Null';

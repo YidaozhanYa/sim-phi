@@ -86,7 +86,7 @@ const Utils = {
 			if (!fn) throw new SyntaxError('Missing family name');
 			// const i0 = /[^\w ]/.exec(fn);
 			// if (i0) throw new SyntaxError(`Invalid character '${i0[0]}' at position ${i0.index}`);
-			const sarr = ['Google', 'Baomitu', 'Local'];
+			const sarr = ['Externals'];
 			return new Promise((resolve, reject) => {
 				let index = sarr.length;
 				const err = new DOMException('The requested font families are not available.', 'Missing font family');
@@ -123,7 +123,7 @@ const Utils = {
 			// const d0 = str => `@font-face{font-family:'${fn}';font-style:${s1};font-weight:${w1};${str}}`; // declaration
 			switch (from) {
 				case 'Google': {
-					const u0 = `//fonts.googleapis.com/css?family=${f3}:${w1}${s1 === 'italic' ? 'i' : ''}`;
+					const u0 = `https://fonts.googleapis.com/css?family=${f3}:${w1}${s1 === 'italic' ? 'i' : ''}`;
 					// const u1 = `//fonts.googleapis.com/css2?family=${f3}&display=swap`;
 					const text = await fetch(u0).then(a => a.text(), _ => '');
 					const rg0 = (text.match(/{.+?}/gs) || []).map(a => a.slice(1, -1)); //Safari不支持(?<=)
@@ -139,11 +139,17 @@ const Utils = {
 					}));
 				}
 				case 'Baomitu': {
-					const u0 = `//lib.baomitu.com/fonts/${f1}/${f1}-${w1}`;
+					const u0 = `https://lib.baomitu.com/fonts/${f1}/${f1}-${w1}`;
 					const source = [ //
 						`url('${u0}.woff2')format('woff2')`, // Super Modern Browsers
 						`url('${u0}.woff')format('woff')`, // Modern Browsers
 						`url('${u0}.ttf')format('truetype')`, // Safari, Android, iOS
+					]
+					return [new FontFace(alt, source.join())]; //以后添加descriptors支持
+				}
+				case 'Externals': {
+					const source = [
+						`url('app://-/external/${f1}-${w1}.woff2')format('woff2')`
 					]
 					return [new FontFace(alt, source.join())]; //以后添加descriptors支持
 				}

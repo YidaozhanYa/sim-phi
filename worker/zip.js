@@ -1,10 +1,6 @@
 let total = 0;
 const urls = [ //JSZip
-	'https://cdn.jsdelivr.net/npm/jszip', //
-	'https://fastly.jsdelivr.net/npm/jszip', //
-	'https://unpkg.com/jszip/dist/jszip.min.js', //
-	'https://cdn.bootcdn.net/ajax/libs/jszip/3.10.1/jszip.min.js', //
-	'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js',
+	'app://-/external/jszip.min.js', // Electron externals
 ];
 for (const url of urls) try { importScripts(url); break; } catch (e) { continue; }
 /** @param {{name:string,path:string,buffer:ArrayBuffer}} data */

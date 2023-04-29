@@ -1,8 +1,8 @@
-import simphi from './js/simphi.js';
-import { audio } from '/utils/aup.js';
-import { full, Timer, getConstructorName, urls, isUndefined, loadJS, frameTimer, time2Str, orientation, FrameAnimater } from './js/common.js';
-import { uploader, ZipReader, readFile } from './js/reader.js';
-import { InteractProxy } from '/utils/interact.js';
+import simphi from 'app://-/js/simphi.js';
+import { audio } from 'app://-/utils/aup.js';
+import { full, Timer, getConstructorName, urls, isUndefined, loadJS, frameTimer, time2Str, orientation, FrameAnimater } from 'app://-/js/common.js';
+import { uploader, ZipReader, readFile } from 'app://-/js/reader.js';
+import { InteractProxy } from 'app://-/utils/interact.js';
 self._i = ['Phi\x67ros模拟器', [1, 4, 22, 'b45'], 1611795955, 1682699376];
 const $id = query => document.getElementById(query);
 const $ = query => document.body.querySelector(query);
@@ -26,7 +26,7 @@ document.oncontextmenu = e => e.preventDefault(); //qwq
 for (const i of $id('view-nav').children) {
 	i.addEventListener('click', function() {
 		for (const i of $id('view-nav').children) i.classList.toggle('active', i === this);
-		if (!$id('view-doc').src) $id('view-doc').src = 'docs/use.html'; //防止阻塞页面
+		if (!$id('view-doc').src) $id('view-doc').src = 'app://-/docs/use.html'; //防止阻塞页面
 		$id('view-doc').classList.toggle('hide', this.id !== 'nav-use');
 		$id('view-cfg').classList.toggle('hide', this.id !== 'nav-cfg');
 		$id('view-msg').classList.toggle('hide', this.id !== 'nav-msg');
@@ -188,7 +188,7 @@ async function checkSupport() {
 	if (!await loadLib('md5', urls.md5, () => isUndefined('md5'))) return -3;
 	msgHandler.sendMessage('加载声音组件...');
 	const oggCompatible = !!(new Audio).canPlayType('audio/ogg');
-	if (!await loadLib('ogg格式兼容', '/lib/oggmented-bundle.js', () => !oggCompatible && isUndefined('oggmented'))) return -4;
+	if (!await loadLib('ogg格式兼容', 'app://-/external/oggmented-bundle.js', () => !oggCompatible && isUndefined('oggmented'))) return -4;
 	audio.init(oggCompatible ? self.AudioContext || self.webkitAudioContext : oggmented.OggmentedAudioContext); //兼容Safari
 	const orientSupported = await orientation.checkSupport();
 	if (!orientSupported) {

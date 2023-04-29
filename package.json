@@ -1,7 +1,31 @@
 {
-  "dependencies": {
-    "jszip": "^3.10.0",
-    "md5-js": "^0.0.3",
-    "stackblur-canvas": "^2.5.0"
-  }
+    "dependencies": {
+        "electron-serve": "^1.1.0"
+    },
+    "devDependencies": {
+        "electron": " ^24.1.3",
+        "electron-builder": "^23.6.0"
+    },
+    "name": "phigros-simulator",
+    "author": "lchzh3473 & YidaozhanYa",
+    "description": "Phigros Simulator",
+    "version": "1.4.22.b45",
+    "type": "commonjs",
+    "main": "electron.js",
+    "build": {
+        "appId": "top.yidaozhan.lchzh3473.PhigrosSimulator",
+        "productName": "PhigrosSimulator",
+        "win": {
+            "target": "dir",
+            "icon": "windows.ico"
+        },
+        "linux": {
+            "target": "dir"
+        }
+    },
+    "scripts": {
+        "build": "electron-builder --windows --linux",
+        "build::windows": "electron-builder --windows",
+        "build::linux": "electron-builder --linux"
+    }
 }
