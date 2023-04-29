@@ -233,11 +233,11 @@ export function csv2array(data, isObject) {
 // self.onerror=(...a)=>console.log('qwq',a);
 // self.addEventListener('error',(...a)=>console.log('qwq',a));
 export const urls = {
-	jszip: ['//unpkg.com/jszip/dist/jszip.min.js', '//cdn.jsdelivr.net/npm/jszip', '//fastly.jsdelivr.net/npm/jszip'],
-	browser: ['//cdn.jsdelivr.net/gh/mumuy/browser/Browser.js', '//fastly.jsdelivr.net/gh/mumuy/browser/Browser.js' /* , '//passer-by.com/browser/Browser.js' */ ],
-	bitmap: ['//cdn.jsdelivr.net/gh/Kaiido/createImageBitmap/dist/createImageBitmap.js', '//fastly.jsdelivr.net/gh/Kaiido/createImageBitmap/dist/createImageBitmap.js'],
-	blur: ['//unpkg.com/stackblur-canvas/dist/stackblur.min.js', '//cdn.jsdelivr.net/npm/stackblur-canvas', '//fastly.jsdelivr.net/npm/stackblur-canvas'],
-	md5: ['//unpkg.com/md5-js/md5.min.js', '//cdn.jsdelivr.net/npm/md5-js', '//fastly.jsdelivr.net/npm/md5-js'],
+	jszip: ['/external/jszip.min.js'],
+	browser: ['/external/Browser.js'],
+	bitmap: ['/external/createImageBitmap.js'],
+	blur: ['/external/stackblur.min.js'],
+	md5: ['/external/md5.min.js'],
 }
 export const getConstructorName = obj => {
 	if (obj === null) return 'Null';

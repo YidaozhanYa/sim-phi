@@ -867,45 +867,69 @@ window.addEventListener('load', async function() {
 	let errorNum = 0;
 	msgHandler.sendMessage('初始化...');
 	if (await checkSupport()) return;
-	const res0 = {};
-	const raw = await fetch(atob('aHR0cHM6Ly9sY2h6aC5uZXQvZGF0YS9wYWNrLmpzb24=')).then(i => i.json());
-	for (const j in raw.image || {}) res0[j] = raw.image[j];
-	for (const j in raw.audio || {}) res0[j] = raw.audio[j];
+	const images = [
+		'JudgeLine',    'ProgressBar',
+		'SongsNameBar', 'HitFXRaw',
+		'Tap',          'TapHL',
+		'Drag',         'DragHL',
+		'HoldHead',     'HoldHeadHL',
+		'Hold',         'HoldHL',
+		'HoldEnd',      'Flick',
+		'FlickHL',      'LevelOver1',
+		'LevelOver3',   'LevelOver4',
+		'LevelOver5',   'Rank'
+	]
+	const imageFx = {
+		"JudgeLine": 8080,
+		"ProgressBar": 8080,
+		"SongsNameBar": 8080,
+		"HitFXRaw": 8080,
+		"Tap": 8080,
+		"TapHL": 8080,
+		"Drag": 8080,
+		"DragHL": 8080,
+		"HoldHead": 8080,
+		"HoldHeadHL": 7875,
+		"Hold": 8080,
+		"HoldHL": 7875,
+		"HoldEnd": 8080,
+		"Flick": 7875,
+		"FlickHL": 8080,
+		"LevelOver1": 8080,
+		"LevelOver3": 8080,
+		"LevelOver4": 8080,
+		"LevelOver5": 8080,
+		"Rank": 8080
+	}
+	const audios = [
+		'HitSong0',
+		'HitSong1',
+		'HitSong2',
+		'LevelOver0_v1',
+		'LevelOver1_v1',
+		'LevelOver2_v1',
+		'LevelOver3_v1'
+	]
 	//加载资源
-	await Promise.all(Object.entries(res0).map(([name, src], _i, arr) => new Promise(resolve => {
-		const [url, ext] = src.split('|');
+	await Promise.all(images.map(name => new Promise(resolve => {
+		const url = "/data/image/" + name + ".png";
 		fetch(url, { referrerPolicy: 'no-referrer' }).then(a => a.blob()).then(async blob => {
 			const img = await createImageBitmap(blob);
-			if (ext && ext[0] === 'm') {
-				const data = decode(img, Number(ext.slice(1))).result;
+			res[name] = img;
+			msgHandler.sendMessage(`加载资源：${name}`);
+		}).catch(err => {
+			console.error(err);
+			msgHandler.sendError(`错误：${++errorNum}个资源加载失败（点击查看详情）`, `资源加载失败，请检查您的网络连接然后重试：\n${new URL(url,location)}`, true);
+		}).finally(resolve);
+	})));
+	await Promise.all(audios.map(name => new Promise(resolve => {
+		const url = "/data/audio/" + name + ".png";
+		fetch(url, { referrerPolicy: 'no-referrer' }).then(a => a.blob()).then(async blob => {
+			const img = await createImageBitmap(blob);
+				const data = decode(img, 8).result;
 				img.close();
-				res[name] = await audio.decode(data).catch(async err => {
-					const blob = await fetch(raw.alternative[name], { referrerPolicy: 'no-referrer' }).then(i => i.blob());
-					return await createImageBitmap(blob).then(decodeAlt).then(audio.decode.bind(audio)).catch(err => {
-						msgHandler.sendWarning(`音频加载存在问题，将导致以下音频无法正常播放：\n${name}(${err.message})\n如果多次刷新问题仍然存在，建议更换设备或浏览器。`);
-						return audio.mute(1);
-					});
-
-					function decodeAlt(img) {
-						const canvas = createOffscreenCanvas(img.width, img.height);
-						const ctx = canvas.getContext('2d');
-						ctx.drawImage(img, 0, 0);
-						const id = ctx.getImageData(0, 0, canvas.width, canvas.height);
-						const ab = new Uint8Array(id.data.length / 4 * 3);
-						const mask = (v, i) => v ^ (i ** 2 * 3473) & 255;
-						for (let i = 0; i < ab.length; i++) ab[i] = id.data[((i / 3) | 0) * 4 + i % 3];
-						const combined = new Uint8Array(ab.length / 2);
-						for (let i = 0; i < ab.length / 2; i++) {
-							combined[i] = mask((ab[i * 2] + 8) / 17 << 4 | (ab[i * 2 + 1] + 8) / 17, i);
-						}
-						const size = new DataView(combined.buffer, 0, 4).getUint32(0);
-						return combined.buffer.slice(4, size + 4);
-					}
-				});
-			} else {
-				res[name] = img;
-			}
-			msgHandler.sendMessage(`加载资源：${Math.floor(++loadedNum / arr.length * 100)}%`);
+				res[name] = await audio.decode(data)
+			msgHandler.sendMessage(`加载资源：${name}`);
 		}).catch(err => {
 			console.error(err);
 			msgHandler.sendError(`错误：${++errorNum}个资源加载失败（点击查看详情）`, `资源加载失败，请检查您的网络连接然后重试：\n${new URL(url,location)}`, true);
@@ -913,8 +937,8 @@ window.addEventListener('load', async function() {
 	})));
 	if (errorNum) return msgHandler.sendError(`错误：${errorNum}个资源加载失败（点击查看详情）`);
 	const entries = ['Tap', 'TapHL', 'Drag', 'DragHL', 'HoldHead', 'HoldHeadHL', 'Hold', 'HoldHL', 'HoldEnd', 'Flick', 'FlickHL'];
-	for (const i of entries) await noteRender.update(i, res[i], 8080 / raw.image[i].split('|')[1]);
-	await noteRender.updateFX(res['HitFXRaw'], 8080 / raw.image['HitFXRaw'].split('|')[1]);
+	for (const i of entries) await noteRender.update(i, res[i], 8080 / imageFx[i]);
+	await noteRender.updateFX(res['HitFXRaw'], 8080 / imageFx['HitFXRaw']);
 	res['NoImageBlack'] = await createImageBitmap(new ImageData(new Uint8ClampedArray(4).fill(0), 1, 1));
 	res['NoImageWhite'] = await createImageBitmap(new ImageData(new Uint8ClampedArray(4).fill(255), 1, 1));
 	res['JudgeLineMP'] = await imgShader(res['JudgeLine'], '#feffa9');
